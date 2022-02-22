@@ -1,27 +1,52 @@
-const obj1 = require('../logger/logger')
-const obj2 = require('../util/helper')
-const obj3 = require('../validator/formatter')
-// const arr = ['Jan','Feb','Mar','Apr','May','June','July','Aug','Sep','Oct','Nov','Dec']
 const express = require('express');
 const router = express.Router();
 
-router.get('/test-me1', function (req, res) {
-    obj1.useWelcome()
-    // console.log(obj4(chars))
-    res.send('My first ever api!')
+router.get('/students/:name', function(req, res) {
+    let studentName = req.params.name
+    console.log(studentName)
+    res.send(studentName)
+})
+
+//1. This API will fetch all movies from array
+router.get('/movies', function (req, res) {
+    res.send('["Ruposh", "Tadap", "Shiddat", "Shershaah", "Tanhaji", "War", "Ludo"]')
 });
 
-router.get('/test-me2', function (req, res) {
-    console.log('Date : ' + obj2.usePrintDate)
-    console.log('Month : ' + obj2.usePrintMonth)
-    console.log(obj2.useBatchInfo)
-    res.send('My second ever api!')
+
+//2. This API will fetch all movie by indexId from array
+router.get('/movies/:movieId', function (req, res) {
+    mov1 = ["Ruposh","Tadap","Shiddat","Shershaah","Tanhaji","War","Ludo"]
+    let value = req.params.movieId;
+    if (value>mov1.length-1) {
+        res.send(`'Movie doesnt  exist'`)
+    }
+    else {
+        res.send(mov1[value])
+    }
 });
 
-router.get('/test-me3', function (req, res) {
-    console.log(obj3.useTrim)
-    console.log(obj3.useNewStr)
-    console.log(obj3.useNewStr2)
-    res.send('My third ever api!')
+
+//4. This API will fetch all movies from array all objects
+router.get('/films', function (req, res) {
+    res.send( [ {id: 1, name: "The Shining"}, {id: 2, name: "Incendies"}, {id: 3,name: "Rang de Basanti"}, {id: 4, name:"Spider Man"}, {id: 5, name: "Dhoom"}, {id: 6, name: "Don"} ] )
 });
+
+
+//5. This API will fetch all movies from array of objects by indexId
+router.get('/films/:filmId', function (req, res) {
+    let mov2 = [ {id: 1, name: '"The Shining"'}, {id: 2, name: '"Incendies"'}, {id: 3,name: '"Rang de Basanti"'}, {id: 4,name: '"Spider Man"'}, {id: 5, name: '"Dhoom"'}, {id: 6, name: '"Don"'}]
+    let value = req.params.filmId;
+    let found = false;
+    for (i = 0; i<mov2.length; i++) {
+        if (mov2[i].id==value) {
+            found = true;
+            res.send(mov2[i])
+            break;
+        }
+    }
+    if (found == false) {
+        res.send(`'Movie doesnt exists'`)
+    }
+});
+
 module.exports = router;
