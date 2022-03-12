@@ -1,6 +1,6 @@
-let axios = require("axios")
+const axios = require('axios')
 
-
+// 1.
 let getStates = async function (req, res) {
 
     try {
@@ -20,6 +20,7 @@ let getStates = async function (req, res) {
 }
 
 
+// 2.
 let getDistricts = async function (req, res) {
     try {
         let id = req.params.stateId
@@ -38,12 +39,14 @@ let getDistricts = async function (req, res) {
     }
 }
 
+
+// 3.
 let getByPin = async function (req, res) {
     try {
         let pin = req.query.pincode
         let date = req.query.date
         console.log(`query params are: ${pin} ${date}`)
-        var options = {
+        let options = {
             method: "get",
             url: `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pin}&date=${date}`
         }
@@ -57,24 +60,49 @@ let getByPin = async function (req, res) {
     }
 }
 
-let getOtp = async function (req, res) {
-    try {
-        let blahhh = req.body
-        
-        console.log(`body is : ${blahhh} `)
-        var options = {
-            method: "post",
-            url: `https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP`,
-            data: blahhh
-        }
 
+// 4.
+let getOtp = async function(req, res){
+    try {
+        let mobileNumber = req.body
+        if(mobileNumber) {
+            let options = {
+                method : "post",
+                url : "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP",
+                data : mobileNumber
+            }
         let result = await axios(options)
-        console.log(result.data)
-        res.status(200).send({ msg: result.data })
+        res.status(200).send({status: true, msg: result.data})
+        }
+        else {
+            res.status(400).send({status: false, msg:"please provide mobile number"})
+        }
     }
     catch (err) {
-        console.log(err)
-        res.status(500).send({ msg: err.message })
+        res.status(500).send({error: err.message})
+    }
+}
+
+
+// 5.
+let getByDistrict = async function (req, res){
+    try{
+        let districts = req.query.district_id
+        let date = req.query.date
+        if(districts && date) {
+            let options = {
+            method: "get",
+            url: `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${districts}&date=${date}`
+            }
+            let result = await axios(options)
+            res.status(200).send({status: true, msg: result.data})
+        } 
+        else {
+          res.status(400).send({status: false, msg: "please provide the input"})
+       }  
+    } 
+    catch (err) {
+        res.status(500).send({error: err.message})
     }
 }
 
@@ -83,3 +111,24 @@ module.exports.getStates = getStates
 module.exports.getDistricts = getDistricts
 module.exports.getByPin = getByPin
 module.exports.getOtp = getOtp
+module.exports.getByDistrict = getByDistrict
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
